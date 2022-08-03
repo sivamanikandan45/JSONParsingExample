@@ -5,12 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.withResumed
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.*
 import org.json.JSONArray
-import org.json.JSONObject
 import org.json.JSONTokener
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -31,15 +29,15 @@ class ListFragment : Fragment() {
         GlobalScope.launch {
             val manager=LinearLayoutManager(context)
             val adapter:ListAdapter
-            var universityList: MutableList<University> = mutableListOf()
+            var holidayList: MutableList<Holiday> = mutableListOf()
             val job=GlobalScope.launch {
-                 universityList= doNetworkOperation()
+                 holidayList= doNetworkOperation()
 
             }
             //delay(10000L)
             job.join()
             println("Got!!!")
-            adapter=ListAdapter(universityList)
+            adapter=ListAdapter(holidayList)
             //val jsonObject = JSONTokener(con).nextValue() as JSONObject
             GlobalScope.launch(Dispatchers.Main) {
                 val recyclerView=view.findViewById<RecyclerView>(R.id.recycler)
@@ -51,8 +49,8 @@ class ListFragment : Fragment() {
 
     }
 
-    private suspend fun doNetworkOperation(): MutableList<University> {
-        var universityList: MutableList<University> = mutableListOf()
+    private suspend fun doNetworkOperation(): MutableList<Holiday> {
+        var holidayList: MutableList<Holiday> = mutableListOf()
         withContext(Dispatchers.IO){
             val url="https://date.nager.at/api/v3/publicholidays/2022/us"
             //val url = "https://raw.githubusercontent.com/Hipo/university-domains-list/master/world_universities_and_domains.json"
@@ -72,14 +70,14 @@ class ListFragment : Fragment() {
                 //val jsonArray=jsonObject.getJSONArray("data")
                 val jsonArray = JSONTokener(string).nextValue() as JSONArray
                 for (i in 0 until jsonArray.length()) {
-                    val university = jsonArray.getJSONObject(i)
-                    val name = university.getString("localName")
+                    val holiday = jsonArray.getJSONObject(i)
+                    val day = holiday.getString("localName")
                     //val jsonArray=jsonObject.getJSONArray("date")
-                    val web = university.getString("date")
-                    universityList.add(University(name, web))
+                    val date = holiday.getString("date")
+                    holidayList.add(Holiday(day, date))
                 }
             }
         }
-        return universityList
+        return holidayList
     }
 }

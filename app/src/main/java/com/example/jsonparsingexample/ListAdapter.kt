@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class ListAdapter(val list:List<University>): RecyclerView.Adapter<ListAdapter.ViewHolder>(){
+class ListAdapter(val list:List<Holiday>): RecyclerView.Adapter<ListAdapter.ViewHolder>(){
     class ViewHolder(view: View):RecyclerView.ViewHolder(view){
         val universityName:TextView
         val universityWeb:TextView
@@ -22,8 +22,8 @@ class ListAdapter(val list:List<University>): RecyclerView.Adapter<ListAdapter.V
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.universityWeb.text=list[position].web
-        holder.universityName.text=list[position].name
+        holder.universityWeb.text=list[position].date
+        holder.universityName.text=list[position].day
     }
 
     override fun getItemCount(): Int {
